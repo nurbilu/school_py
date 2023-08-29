@@ -1,7 +1,5 @@
 from enum import Enum 
 import numpy
-import pickle
-
 class Actions(Enum):
     ADD_STUDENT = 0
     ADD_TEST = 1
