@@ -1,4 +1,24 @@
-import xml.etree.ElementTree as ET
+from enum import Enum 
+import json
+import numpy as np
+
+class Actions(Enum):
+    ADD_STUDENT = 0
+    ADD_TEST = 1
+    PRINT_STUDENT_AVRAGE = 2
+    AVRAGE_SORTED = 3
+    AVRAGE_SORTED_REVERSE =4
+    HIGHEST_SCORE = 5
+    LOWEST_SCORE = 6
+    PRINT_STUDENTS = 7
+    EXIT = 8
+
+
+class Commands(Enum):
+    LOAD_DATA = 0
+    SAVE_DATA = 1
+
+
 
 class Human:
     def __init__(self, first_name, last_name ,age):
@@ -6,87 +26,93 @@ class Human:
         self.last_name = last_name
         self.age = age
 
+    def __str__(self):
+        return f"First name: {self.first_name},Last name:{self.last_name}, Age: {self.age}"
+
+
 class Student(Human):
+    students = []
     def test(self):
         print(self.first_name , 'is doing a test')
 
-    def __init__(self, first_name, last_name, age, student_id, field_of_study):
-        super().__init__(first_name, last_name, age)
+    def __init__(self, first_name, last_name,age, student_id, field_of_study):
+        super().__init__(first_name,last_name, age)
         self.student_id = student_id
         self.field_of_study = field_of_study
-        self.test_lst = []
-        self.xml_filename = ""  # Initialize the filename attribute
+        self.test_lst=[]
+    
+    def add_test(self ,type,grade):
+        self.test_lst.append(Test(type , grade))
 
-    def add_test(self, type, grade):
-        self.test_lst.append(Test(type, grade))
+    @staticmethod
+    def print_all():
+        print("\n".join(str(student) for student in Student.students))
+    
+    @staticmethod
+    def highest():
+        if Student.students:
+            return max(Student.students, key=lambda student: student.avg_score())
 
-    def print_all(self):
-        for test in self.test_lst:
-            print(f"Type: {test.type}, Grade: {test.grade}")
+    @staticmethod  
+    def lowest():
+        if Student.students:  
+            return min(Student.students, key=lambda student: student.avg_score())
 
-    def highest(self):
-        if not self.test_lst:
-            return None
-        return max(self.test_lst, key=lambda x: x.grade)
+    @staticmethod
+    def stop():
+        print("Exiting program...")
+        exit()
 
-    def lowest(self):
-        if not self.test_lst:
-            return None
-        return min(self.test_lst, key=lambda x: x.grade)
-
-    def stop(self):
-        # Create an XML element for the student and their tests
-        student_element = ET.Element("Student")
-        name_element = ET.SubElement(student_element, "Name")
-        name_element.text = f"{self.first_name} {self.last_name}"
-        age_element = ET.SubElement(student_element, "Age")
-        age_element.text = str(self.age)
-        id_element = ET.SubElement(student_element, "StudentID")
-        id_element.text = self.student_id
-        study_element = ET.SubElement(student_element, "FieldOfStudy")
-        study_element.text = self.field_of_study
-
-        tests_element = ET.SubElement(student_element, "Tests")
-        for test in self.test_lst:
-            test_element = ET.SubElement(tests_element, "Test")
-            type_element = ET.SubElement(test_element, "Type")
-            type_element.text = test.type
-            grade_element = ET.SubElement(test_element, "Grade")
-            grade_element.text = str(test.grade)
-
-        # Create an XML tree with the student element
-        student_tree = ET.ElementTree(student_element)
-
-        # Write the XML tree to the file specified by xml_filename
-        student_tree.write(self.xml_filename)
+    def avg_score(self):
+        if self.test_lst:
+            return np.mean([test.grade for test in self.test_lst])
+        else:
+            return 0
 
     def __str__(self):
         return f"Student ID: {self.student_id}, Field of Study: {self.field_of_study}, {super().__str__()}"
 
-class Test:
-    def __init__(self, type, grade):
-        self.type = type
-        self.grade = grade
 
-    @staticmethod
-    def avg_test_grd(tests):
-        if not tests:
-            return 0.0
-        total = sum(test.grade for test in tests)
-        return total / len(tests)
+
+class Test(Student):
+    def __init__(self, type, grade):
+      self.type=""
+      self.grade =0 
+    
+    # def avg_test_grd():
+    #     pass
+def load_data():
+  try:
+    with open('students.json') as f:
+      data = json.load(f)
+      for item in data:
+        student = Student(**item)
+        Student.students.append(student)
+  except FileNotFoundError:
+    print("Could not load student data.")
+
+def save_data():
+  data = [student.__dict__ for student in Student.students]
+  with open('students.json', 'w') as f:
+    json.dump(data, f, indent=2)
+  print("Student data saved.")
 
 if __name__ == '__main__':
-    student1 = Student("John", "Doe", 20, "12345", "Computer Science")
-    student2 = Student("aiden", "allstar", 23, "09876", "math")
-    student1.add_test("Midterm", 85)
-    student1.add_test("Final", 92)
-    student2.add_test("Midterm", 67)
-    student2.add_test("Final", 97)
-    # Set the XML filename before stopping
-    student1.xml_filename = "student_data.xml"
-    print("\n",student1)
-    print("\n",student2)
-    student1.print_all()
-    student2.print_all()
-    # Save the data to an XML file when stopping the program
-    student1.stop()
+    load_data()
+    
+    while True:
+        action = int(input("Select an action: "))
+        if action == Actions.ADD_STUDENT.value:
+            Human
+        elif action == Actions.ADD_TEST.value: 
+            Student.add_test()
+        elif action == Actions.PRINT_STUDENT_AVRAGE.value:
+            Student.print_all()
+        elif action == Commands.LOAD_DATA.value:
+            load_data()
+        elif action == Commands.SAVE_DATA.value:
+            save_data()
+        elif action == Actions.EXIT.value:
+            Student.stop()
+      
+    save_data()

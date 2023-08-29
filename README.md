@@ -12,3 +12,6 @@ Teaching Python to students
 Learning Python for educational purposes
 Creating school administration programs
 Building educational games and simulations
+
+
+

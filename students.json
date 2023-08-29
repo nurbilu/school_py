@@ -1,0 +1,23 @@
+[
+  {
+    "first_name": "nir",
+    "last_name": "sapir",
+    "age": 24,
+    "student_id": "934599",
+    "field_of_study": "geology"
+  },
+  {
+    "first_name": "matan",
+    "last_name": "kobi",
+    "age": 22,
+    "student_id": "789012349",
+    "field_of_study": "math"
+  },
+  {
+    "first_name": "mike",
+    "last_name": "sendes",
+    "age": 91,
+    "student_id": "001",
+    "field_of_study": "history"
+  }
+]
