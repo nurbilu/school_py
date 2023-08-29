@@ -1,3 +1,24 @@
+from enum import Enum 
+import numpy
+import pickle
+
+class Actions(Enum):
+    ADD_STUDENT = 0
+    ADD_TEST = 1
+    PRINT_STUDENT_AVRAGE = 2
+    AVRAGE_SORTED = 3
+    AVRAGE_SORTED_REVERSE =4
+    HIGHEST_SCORE = 5
+    LOWEST_SCORE = 6
+    PRINT_STUDENTS = 7
+    EXIT = 8
+
+
+class Commands(Enum):
+    pass
+
+
+
 class Human:
     def __init__(self, first_name, last_name ,age):
         self.first_name = first_name

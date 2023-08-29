@@ -1,4 +1,6 @@
 import xml.etree.ElementTree as ET
+import math
+import numpy
 
 class Human:
     def __init__(self, first_name, last_name ,age):
